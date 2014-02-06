@@ -10,9 +10,62 @@ $ npm install theme
 ```
 
 ### Example
+
+require theme module and init a valid theme
 ````javascript
-var theme = require('theme');
+var Theme = require('theme');
+var candy = new Theme('/some/dir/name/to/theme');
 ````
+use `candy` theme in `app.js`
+
+````javascript
+app.get('/article', function(req, res, next) {
+    // some logic to fetch data ...
+    return res.send(candy.render('article', data));
+});
+````
+switch in multiple themes:
+````javascript
+var themes = new Theme({
+    candy: '/some/dir/to/theme/candy',
+    green: '/some/dir/to/theme/green'
+});
+
+app.get('/article/:theme', function(req, res, next){
+    if (!themes[req.params.theme]) return res.send('404');
+    return res.send(themes[req.params.theme].render('article'));
+})
+````
+load NPM module as a theme by package name.
+````javascript
+// load a single theme by name
+var candy = new Theme('candy-theme-default');
+// or load themes
+var themes = new Theme([
+    'candy-theme-default',
+    'candy-theme-green'
+]);
+````
+auto-scan availables themes:
+
+````javascript
+// just init with no params.
+var themes = new Theme();
+
+console.log(themes);
+
+{
+    'candy-theme-default': {
+        name: 'candy-theme-default',
+        ......
+    },
+    'candy-theme-green': {
+        name: 'candy-theme-default',
+        ......
+    }
+}
+````
+enjoy your themes and try to publish them to NPM.
 
 ### API
 check this file: `index.js`
