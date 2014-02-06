@@ -1,0 +1,24 @@
+{
+  "name": "theme",
+  "version": "0.0.0",
+  "description": "a theme loader middleware of Express/Koa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:turingou/theme.git"
+  },
+  "keywords": [
+    "theme",
+    "middleware",
+    "koa",
+    "express"
+  ],
+  "author": "turing <o.u.turing@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/turingou/theme/issues"
+  }
+}
