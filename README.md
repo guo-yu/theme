@@ -1,7 +1,6 @@
-
 ## theme ![npm](https://badge.fury.io/js/theme.png)
 
-a theme loader middleware of Express/Koa
+a theme loader for Express / Koa
 
 ### Installation
 
@@ -54,6 +53,7 @@ var themes = new Theme();
 
 console.log(themes);
 
+// only modules' name contains 'theme' will be list.
 {
     'candy-theme-default': {
         name: 'candy-theme-default',
