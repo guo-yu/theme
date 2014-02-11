@@ -1,4 +1,4 @@
-## theme ![npm](https://badge.fury.io/js/theme.png)
+## ![logo](https://cdn1.iconfinder.com/data/icons/august/PNG/Colors.png) theme ![npm](https://badge.fury.io/js/theme.png)
 
 a smart theme loader and manager for CMS platforms
 
