@@ -1,6 +1,6 @@
 ## theme ![npm](https://badge.fury.io/js/theme.png)
 
-a theme loader for Express / Koa
+a smart theme loader and manager for CMS platforms
 
 ### Installation
 
@@ -10,62 +10,61 @@ $ npm install theme
 
 ### Example
 
-require theme module and init a valid theme
-````javascript
-var Theme = require('theme');
-var candy = new Theme('/some/dir/name/to/theme');
-````
-use `candy` theme in `app.js`
+require theme module and init a valid `home` dir.
+a `home` dir is the very parent dir of `node_modules` of your project.
+assume your project named `candy`, of course in the package.json.
+
+- `candy` (HOME)
+    - package.json (name="candy")
+    - `public` (static files locate here)
+    - `node_modules`
+        - `candy-theme-default`
+            - package.json("view engine"="jade","static"="./static")
+            - home.jade
+            - `static` (your theme's static files)
+        - `candy-theme-colorful`
+        - `underscore` just a example
+        - other-deps...
+
+Theme will load NPM module as a theme by package name, and auto-search the current result. even not fully filename provided. So here is a simple example, we provide `default/home` as a shortname of `candy-theme-default/home.jade`:
 
 ````javascript
+var Theme = require('theme'),
+    themes = new Theme(__dirname);
+
 app.get('/article', function(req, res, next) {
     // some logic to fetch data ...
-    return res.send(candy.render('article', data));
+    var data = [1,2,3,4,5];
+    // render theme by shortname
+    themes.render('default/home', data, function(err, html){
+        if (err) return next(err);
+        // theme will replace your static files root by {{static}}
+        // so make sure in your theme, import static file like:
+        // href="{{static}}/css/basic.css"
+        return res.send(html);
+    });
 });
 ````
-switch in multiple themes:
+In this case below, we list all available themes which named like `candy-theme-balabala`:
+
 ````javascript
-var themes = new Theme({
-    candy: '/some/dir/to/theme/candy',
-    green: '/some/dir/to/theme/green'
+theme.list(function(err, list) {
+    if (err) return console.log(err)
+    // underscore and other packages will not be listd here.
+    // the result is a parsed JSON-like Object.
+    console.log(list);
 });
-
-app.get('/article/:theme', function(req, res, next){
-    if (!themes[req.params.theme]) return res.send('404');
-    return res.send(themes[req.params.theme].render('article'));
-})
 ````
-load NPM module as a theme by package name.
-````javascript
-// load a single theme by name
-var candy = new Theme('candy-theme-default');
-// or load themes
-var themes = new Theme([
-    'candy-theme-default',
-    'candy-theme-green'
-]);
-````
-auto-scan availables themes:
+Theme also support install theme by NPM package name:
 
 ````javascript
-// just init with no params.
-var themes = new Theme();
-
-console.log(themes);
-
-// only modules' name contains 'theme' will be list.
-{
-    'candy-theme-default': {
-        name: 'candy-theme-default',
-        ......
-    },
-    'candy-theme-green': {
-        name: 'candy-theme-default',
-        ......
-    }
-}
+theme.install('mails-flat', function(err, logs, modules){
+    if (err) return console.log(err);
+    return console.log(logs);
+});
 ````
-enjoy your themes and try to publish them to NPM.
+
+Enjoy your themes and be happy publishing them to NPM !
 
 ### API
 check this file: `index.js`
