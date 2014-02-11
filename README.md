@@ -10,7 +10,7 @@ $ npm install theme
 
 ### Example
 
-require theme module and init a valid `home` dir.
+require theme module and init a valid theme manager with `home` dir.
 a `home` dir is the very parent dir of `node_modules` of your project.
 assume your project named `candy`, of course in the package.json.
 
@@ -26,7 +26,7 @@ assume your project named `candy`, of course in the package.json.
         - `underscore` just a example
         - other-deps...
 
-Theme will load NPM module as a theme by package name, and auto-search the current result. even not fully filename provided. So here is a simple example, we provide `default/home` as a shortname of `candy-theme-default/home.jade`:
+Theme will load NPM module as a theme by package name, and auto-search the correct result. even not fully filename provided. So here is a simple example, we provide `default/home` as a shortname of `candy-theme-default/home.jade`:
 
 ````javascript
 var Theme = require('theme'),
