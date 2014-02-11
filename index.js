@@ -1,1 +1,1 @@
-module.exports = require('./libs/theme');
+exports = module.exports = require('./libs/theme');
