@@ -1,16 +1,18 @@
 var fs = require('fs'),
     path = require('path'),
     Hub = require('pkghub'),
+    _ = require('underscore'),
     mkdirp = require('mkdirp'),
     render = require('pkghub-render');
 
 var hub = new Hub;
 
-var Theme = function(home, defaultTheme) {
+var Theme = function(home, defaultTheme, locals) {
     this.home = home || path.resolve(__dirname, '../', '../', '../');
     this.publics = path.join(this.home, './public');
     this.meta = this.pkg() || {};
     this.defaultTheme = defaultTheme;
+    this.locals = locals || {};
 }
 
 Theme.prototype.config = function(key, value) {
@@ -73,9 +75,11 @@ Theme.prototype.render = function(template, data, callback) {
     if (!pkgname || !filename) return callback(new Error('template not found'));
     // 判断是不是 shortname, 这里有一个硬编码，需要把这个功能放到 pkghub 中
     if (pkgname.indexOf('-') === -1 && this.meta.name) pkgname = this.meta.name + '-theme-' + pkgname;
+    // 混合 locals，替代 app.locals 与 res.locals
+    if (!_.isEmpty(this.locals)) data = _.extend(this.locals, data);
     // 渲染页面时要进行 {{static}} 变量的替换，这里就是替换成相应主题在 public 下的目录,
     data.static = path.join(this.publics, pkgname);
-    render(template, data, function(err, html, tpl, data, engine) {
+    render([pkgname, filename].join('/'), data, function(err, html, tpl, data, engine) {
         if (err) return callback(err);
         callback(null, html, tpl, data);
     });
