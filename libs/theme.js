@@ -6,10 +6,16 @@ var fs = require('fs'),
 
 var hub = new Hub;
 
-var Theme = function(home) {
+var Theme = function(home, defaultTheme) {
     this.home = home || path.resolve(__dirname, '../', '../', '../');
     this.publics = path.join(this.home, './public');
     this.meta = this.pkg() || {};
+    this.defaultTheme = defaultTheme;
+}
+
+Theme.prototype.config = function(key, value) {
+    if (key && value) this[key] = value;
+    return this[key];
 }
 
 Theme.prototype.pkg = function() {
