@@ -72,17 +72,15 @@ Theme.prototype.render = function(template, data, callback) {
     // 先判断是不是有效的文件名
     var pkgname = hub.finder.split(template);
     var filename = hub.finder.split(template, 'filename');
-    if (!pkgname || !filename) return callback(new Error('template not found'));
+    var cb = (callback && _.isFunction(callback)) ? callback : function(){};
+    if (!pkgname || !filename) return cb(new Error('template not found'));
     // 判断是不是 shortname, 这里有一个硬编码，需要把这个功能放到 pkghub 中
     if (pkgname.indexOf('-') === -1 && this.meta.name) pkgname = this.meta.name + '-theme-' + pkgname;
     // 混合 locals，替代 app.locals 与 res.locals
     if (!_.isEmpty(this.locals)) data = _.extend(this.locals, data);
     // 渲染页面时要进行 {{static}} 变量的替换，这里就是替换成相应主题在 public 下的目录,
     data.static = path.join(this.publics, pkgname);
-    render([pkgname, filename].join('/'), data, function(err, html, tpl, data, engine) {
-        if (err) return callback(err);
-        callback(null, html, tpl, data);
-    });
+    return render([pkgname, filename].join('/'), data, cb);
 };
 
 exports = module.exports = Theme;
