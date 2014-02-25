@@ -11,8 +11,9 @@ var Theme = function(home, defaultTheme, locals) {
     this.home = home || path.resolve(__dirname, '../', '../', '../');
     this.publics = path.join(this.home, './public');
     this.meta = this.pkg() || {};
-    this.defaultTheme = defaultTheme;
+    this.defaults = defaultTheme || null;
     this.locals = locals || {};
+    if (this.defaults) this.shadow(function(err){});
 }
 
 Theme.prototype.config = function(key, value) {
@@ -25,6 +26,19 @@ Theme.prototype.pkg = function() {
         return require(path.join(this.home, './package.json'));
     } catch (err) {
         return null;
+    }
+}
+
+Theme.prototype.shadow = function(selected, callback) {
+    var theme = selected || this.defaults; 
+    var statics = path.join(theme.realPath, theme.static || './static');
+    // 创建一个静态资源软链接
+    try {
+        var shadow = path.join(self.publics, theme.name);
+        mkdirp.sync(shadow);
+        fs.symlink(statics, shadow, 'dir', callback);
+    } catch (err) {
+        return callback(err)
     }
 }
 
@@ -49,19 +63,9 @@ Theme.prototype.install = function(name, callback) {
     hub.install(name, function(err, logs, modules) {
         if (err) return callback(err);
         var theme = modules.dependencies[name];
-        var dir = theme.realPath;
-        var statics = path.join(dir, theme.static || './static');
-        try {
-            var shadow = path.join(self.publics, theme.name);
-            mkdirp.sync(shadow);
-            // 创建一个静态资源软链接
-            fs.symlink(statics, shadow, 'dir', function(err) {
-                if (err) return callback(err);
-                return callback(null, logs, modules);
-            });
-        } catch (err) {
-            return callback(err)
-        }
+        self.shadow(theme, function(err){
+            callback(err, logs, modules);
+        });
     });
 }
 
@@ -79,7 +83,7 @@ Theme.prototype.render = function(template, data, callback) {
     // 混合 locals，替代 app.locals 与 res.locals
     if (!_.isEmpty(this.locals)) data = _.extend(this.locals, data);
     // 渲染页面时要进行 {{static}} 变量的替换，这里就是替换成相应主题在 public 下的目录,
-    data.static = path.join(this.publics, pkgname);
+    data.static = '/' + pkgname;
     return render([pkgname, filename].join('/'), data, cb);
 };
 
