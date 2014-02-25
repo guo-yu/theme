@@ -13,7 +13,7 @@ var Theme = function(home, defaultTheme, locals) {
     this.meta = this.pkg() || {};
     this.defaults = defaultTheme || null;
     this.locals = locals || {};
-    if (this.defaults) this.shadow(function(err){});
+    if (this.defaults) this.shadow();
 }
 
 Theme.prototype.config = function(key, value) {
@@ -30,15 +30,19 @@ Theme.prototype.pkg = function() {
 }
 
 Theme.prototype.shadow = function(selected, callback) {
+    var self = this;
     var theme = selected || this.defaults; 
     var statics = path.join(theme.realPath, theme.static || './static');
     // 创建一个静态资源软链接
     try {
         var shadow = path.join(self.publics, theme.name);
-        mkdirp.sync(shadow);
-        fs.symlink(statics, shadow, 'dir', callback);
+        // mkdirp.sync(shadow);
+        fs.symlinkSync(statics, shadow, 'dir');
+        if (!callback) return true;
+        return callback(null);
     } catch (err) {
-        return callback(err)
+        if (!callback) throw err;
+        return callback(err);
     }
 }
 
