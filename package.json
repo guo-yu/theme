@@ -22,7 +22,6 @@
     "url": "https://github.com/turingou/theme/issues"
   },
   "dependencies": {
-    "mkdirp": "*",
     "pkghub": "~0.0.5",
     "underscore": "*",
     "pkghub-render": "*"

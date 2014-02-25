@@ -2,7 +2,6 @@ var fs = require('fs'),
     path = require('path'),
     Hub = require('pkghub'),
     _ = require('underscore'),
-    mkdirp = require('mkdirp'),
     render = require('pkghub-render');
 
 var hub = new Hub;
@@ -37,7 +36,7 @@ Theme.prototype.shadow = function(selected, callback) {
     try {
         var shadow = path.join(self.publics, theme.name);
         // mkdirp.sync(shadow);
-        fs.symlinkSync(statics, shadow, 'dir');
+        if (!fs.existsSync(shadow)) fs.symlinkSync(statics, shadow, 'dir');
         if (!callback) return true;
         return callback(null);
     } catch (err) {
