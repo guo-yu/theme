@@ -8,8 +8,8 @@ var hub = new Hub;
 
 var Theme = function(home, defaultTheme, locals) {
     this.home = home || path.resolve(__dirname, '../', '../', '../');
-    this.publics = path.join(this.home, './public');
     this.meta = this.pkg() || {};
+    this.publics = path.join(this.home, this.meta.public || './public');
     this.defaults = defaultTheme || null;
     this.locals = locals || {};
     if (this.defaults) this.shadow();
@@ -30,8 +30,15 @@ Theme.prototype.pkg = function() {
 
 Theme.prototype.shadow = function(selected, callback) {
     var self = this;
-    var theme = selected || this.defaults; 
-    var statics = path.join(theme.realPath, theme.static || './static');
+    var theme = selected || this.defaults;
+    if (!theme) return false;
+    var staticDir = theme.static;
+    var isRemote = staticDir && (staticDir.indexOf('http') === 0 || staticDir.indexOf('https') === 0);
+    if (isRemote) {
+        if (callback && _.isFunction(callback)) return callback(null);
+        return true;
+    }
+    var statics = path.join(theme.realPath, staticDir || './static');
     // 创建一个静态资源软链接
     try {
         var shadow = path.join(self.publics, theme.name);
