@@ -4,6 +4,10 @@ var fs = require('fs'),
     _ = require('underscore'),
     render = require('pkghub-render');
 
+var isRemote = function(dir) {
+    return dir && (dir.indexOf('http') === 0 || dir.indexOf('https') === 0);
+}
+
 var hub = new Hub;
 
 var Theme = function(home, defaultTheme, locals) {
@@ -32,13 +36,11 @@ Theme.prototype.shadow = function(selected, callback) {
     var self = this;
     var theme = selected || this.defaults;
     if (!theme) return false;
-    var staticDir = theme.static;
-    var isRemote = staticDir && (staticDir.indexOf('http') === 0 || staticDir.indexOf('https') === 0);
-    if (isRemote) {
+    if (isRemote(theme.static)) {
         if (callback && _.isFunction(callback)) return callback(null);
         return true;
     }
-    var statics = path.join(theme.realPath, staticDir || './static');
+    var statics = path.join(theme.realPath, theme.static || './static');
     // 创建一个静态资源软链接
     try {
         var shadow = path.join(self.publics, theme.name);
@@ -92,8 +94,6 @@ Theme.prototype.render = function(template, data, callback) {
     if (pkgname.indexOf('-') === -1 && this.meta.name) pkgname = this.meta.name + '-theme-' + pkgname;
     // 混合 locals，替代 app.locals 与 res.locals
     if (!_.isEmpty(this.locals)) data = _.extend(this.locals, data);
-    // 渲染页面时要进行 {{static}} 变量的替换，这里就是替换成相应主题在 public 下的目录,
-    data.static = '/' + pkgname;
     return render([pkgname, filename].join('/'), data, cb);
 };
 
