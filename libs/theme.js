@@ -44,7 +44,7 @@ Theme.prototype.shadow = function(selected, callback) {
     // 创建一个静态资源软链接
     try {
         var shadow = path.join(self.publics, theme.name);
-        // mkdirp.sync(shadow);
+        if (!fs.existsSync(self.publics)) fs.mkdirSync(self.publics);
         if (!fs.existsSync(shadow)) fs.symlinkSync(statics, shadow, 'dir');
         if (!callback) return true;
         return callback(null);
