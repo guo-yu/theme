@@ -1,6 +1,6 @@
 {
   "name": "theme",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "a smart theme loader and manager for CMS platforms",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,6 @@
   "dependencies": {
     "underscore": "*",
     "pkghub": "~0.0.5",
-    "pkghub-render": "~0.0.4"
+    "pkghub-render": "~0.0.5"
   }
 }
