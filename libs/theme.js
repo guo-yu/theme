@@ -23,7 +23,7 @@ Theme.prototype.config = function(key, value) {
 Theme.prototype.local = function(key) {
     var self = this;
     return function(req, res, next) {
-        if (!key || !res.locals[key]) return next();
+        if (!key) return next();
         self.locals[key] = res.locals[key];
         return next();
     }
