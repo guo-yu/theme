@@ -2,21 +2,17 @@ var fs = require('fs'),
     path = require('path'),
     Hub = require('pkghub'),
     _ = require('underscore'),
-    render = require('pkghub-render');
-
-var isRemote = function(dir) {
-    return dir && (dir.indexOf('http') === 0 || dir.indexOf('https') === 0);
-}
+    render = require('pkghub-render'),
+    finder = require('./finder');
 
 var hub = new Hub;
 
-var Theme = function(home, defaultTheme, locals) {
+var Theme = function(home, locals) {
     this.home = home || path.resolve(__dirname, '../', '../', '../');
-    this.meta = this.pkg() || {};
+    this.meta = finder.pkg(this.home) || {};
     this.publics = path.join(this.home, this.meta.public || './public');
-    this.defaults = defaultTheme || null;
     this.locals = locals || {};
-    if (this.defaults) this.shadow();
+    finder.shadows(this);
 }
 
 Theme.prototype.config = function(key, value) {
@@ -24,38 +20,18 @@ Theme.prototype.config = function(key, value) {
     return this[key];
 }
 
-Theme.prototype.pkg = function() {
-    try {
-        return require(path.join(this.home, './package.json'));
-    } catch (err) {
-        return null;
-    }
-}
-
-Theme.prototype.shadow = function(selected, callback) {
+Theme.prototype.local = function(key) {
     var self = this;
-    var theme = selected || this.defaults;
-    if (!theme) return false;
-    if (isRemote(theme.static)) {
-        if (callback && _.isFunction(callback)) return callback(null);
-        return true;
-    }
-    var statics = path.join(theme.realPath, theme.static || './static');
-    // 创建一个静态资源软链接
-    try {
-        var shadow = path.join(self.publics, theme.name);
-        if (!fs.existsSync(self.publics)) fs.mkdirSync(self.publics);
-        if (!fs.existsSync(shadow)) fs.symlinkSync(statics, shadow, 'dir');
-        if (!callback) return true;
-        return callback(null);
-    } catch (err) {
-        if (!callback) throw err;
-        return callback(err);
+    return function(req, res, next) {
+        if (!key || !res.locals[key]) return next();
+        self.locals[key] = res.locals[key];
+        return next();
     }
 }
 
 // 列出所有可用主题
 // e.g: theme.list()
+// TODO: 在列表出所有主题的同时确保所有主题都在 public 目录下添加了镜像
 Theme.prototype.list = function(callback) {
     var self = this;
     hub.themes(function(err, themes) {
@@ -75,7 +51,7 @@ Theme.prototype.install = function(name, callback) {
     hub.install(name, function(err, logs, modules) {
         if (err) return callback(err);
         var theme = modules.dependencies[name];
-        self.shadow(theme, function(err){
+        finder.shadow(theme, self.publics, function(err) {
             callback(err, logs, modules);
         });
     });
