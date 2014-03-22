@@ -8,11 +8,12 @@ var hub = new Hub;
 
 module.exports = Theme;
 
-function Theme(home, locals) {
+function Theme(home, locals, defaultTheme) {
   this.home = home || path.resolve(__dirname, '../', '../', '../');
   this.meta = finder.pkg(this.home) || {};
   this.publics = path.join(this.home, this.meta.public || './public');
   this.locals = locals || {};
+  this.defaultTheme = defaultTheme || null;
   finder.shadows(this);
 }
 
@@ -59,6 +60,7 @@ Theme.prototype.install = function(name, callback) {
 }
 
 // 使用某个主题下的某一模板渲染
+// 如果不给定主题，寻找默认主题
 // e.g: candy-theme-default/index, {data: data}, callback
 // e.g: 使用 shortname 加载：default/index; 会自动加上 candy-theme 这个关键词
 Theme.prototype.render = function(template, data, callback) {
@@ -66,7 +68,9 @@ Theme.prototype.render = function(template, data, callback) {
   var pkgname = hub.finder.split(template);
   var filename = hub.finder.split(template, 'filename');
   var cb = (callback && _.isFunction(callback)) ? callback : function() {};
-  if (!pkgname || !filename) return cb(new Error('template not found'));
+  if (!filename) return cb(new Error('template not found'));
+  if (!pkgname && filename) pkgname = this.defaultTheme;
+  if (!pkgname) return cb(new Error('theme not found'));
   // 判断是不是 shortname, 这里有一个硬编码，需要把这个功能放到 pkghub 中
   if (pkgname.indexOf('-') === -1 && this.meta.name) pkgname = this.meta.name + '-theme-' + pkgname;
   // 混合 locals，替代 app.locals 与 res.locals
