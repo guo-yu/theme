@@ -38,9 +38,12 @@ Theme.prototype.list = function(callback) {
   var self = this;
   hub.themes(function(err, themes) {
     if (err) return callback(err);
-    var results = {};
-    if (themes && themes.name) results[themes.name] = themes;
-    return callback(err, results);
+    if (themes && themes.name) {
+      var results = {};
+      results[themes.name] = themes;
+      return callback(err, results);
+    }
+    return callback(err, themes);
   });
 }
 
