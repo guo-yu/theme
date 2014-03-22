@@ -1,6 +1,6 @@
 {
   "name": "theme",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "a smart theme loader and manager for CMS platforms",
   "main": "index.js",
   "scripts": {
