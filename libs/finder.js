@@ -2,14 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
 
-function isRemote(dir) {
-  return dir && (dir.indexOf('http') === 0 || dir.indexOf('https') === 0);
-}
-
-function isFunction(fn) {
-  return fn && _.isFunction(fn);
-}
-
 exports.pkg = function(home) {
   try {
     return require(path.join(home, './package.json'));
@@ -66,4 +58,12 @@ exports.shadows = function(self) {
     return true;
   });
   return modules;
+}
+
+function isRemote(dir) {
+  return dir && (dir.indexOf('http') === 0 || dir.indexOf('https') === 0);
+}
+
+function isFunction(fn) {
+  return fn && _.isFunction(fn);
 }

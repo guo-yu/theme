@@ -17,11 +17,6 @@ function Theme(home, locals, defaultTheme) {
   finder.shadows(this);
 }
 
-Theme.prototype.config = function(key, value) {
-  if (key && value) this[key] = value;
-  return this[key];
-}
-
 Theme.prototype.local = function(key) {
   var self = this;
   return function(req, res, next) {
@@ -79,4 +74,4 @@ Theme.prototype.render = function(template, data, callback) {
   // 混合 locals，替代 app.locals 与 res.locals
   if (!_.isEmpty(this.locals)) data = _.extend(this.locals, data);
   return render([pkgname, filename].join('/'), data, cb);
-};
+}
