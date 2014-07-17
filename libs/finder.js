@@ -4,7 +4,9 @@ var _ = require('underscore');
 
 exports.pkg = function(home) {
   try {
-    return require(path.join(home, './package.json'));
+    return require(
+      path.join(home, './package.json')
+    );
   } catch (err) {
     return null;
   }
@@ -30,25 +32,23 @@ exports.shadow = function(theme, publics, callback) {
     throw err;
   }
   try {
-    console.log(fs.readlinkSync(shadow));
-    if (fs.readlinkSync(shadow) === statics) return cb(null);
+    if (fs.readlinkSync(shadow) === statics) {
+      return cb(null);
+    }
   } catch (err) {
     // 如果没有这个link
-    console.log(err);
+    fs.symlinkSync(statics, shadow, 'dir');
+    return cb(null);
   }
   try {
     // 如果软链没有指向目标，删除软链
     fs.unlinkSync(shadow);
+    // 重新生成软链
+    fs.symlinkSync(statics, shadow, 'dir');
+    return cb(null);
   } catch (err) {
     throw err;
   }
-  try {
-    // 重新生成软链
-    fs.symlinkSync(statics, shadow, 'dir');
-  } catch (err) {
-    throw err;   
-  }
-  return cb(null);
 }
 
 exports.shadows = function(self) {
