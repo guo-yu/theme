@@ -23,15 +23,32 @@ exports.shadow = function(theme, publics, callback) {
   var cb = isFunction(callback) ? callback : function() {};
   if (isRemote(theme.static)) return cb(null);
   var statics = path.join(theme.realPath, theme.static || './static');
+  var shadow = path.join(publics, theme.name);
   try {
-    var shadow = path.join(publics, theme.name);
     if (!fs.existsSync(publics)) fs.mkdirSync(publics);
-    if (!fs.existsSync(shadow)) fs.symlinkSync(statics, shadow, 'dir');
-    return cb(null);
   } catch (err) {
-    if (!isFunction(callback)) throw err;
-    return callback(err);
+    throw err;
   }
+  try {
+    console.log(fs.readlinkSync(shadow));
+    if (fs.readlinkSync(shadow) === statics) return cb(null);
+  } catch (err) {
+    // 如果没有这个link
+    console.log(err);
+  }
+  try {
+    // 如果软链没有指向目标，删除软链
+    fs.unlinkSync(shadow);
+  } catch (err) {
+    throw err;
+  }
+  try {
+    // 重新生成软链
+    fs.symlinkSync(statics, shadow, 'dir');
+  } catch (err) {
+    throw err;   
+  }
+  return cb(null);
 }
 
 exports.shadows = function(self) {

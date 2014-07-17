@@ -4,7 +4,7 @@
   "description": "a smart theme loader and manager for CMS platforms",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "example": "node example/demo.js"
   },
   "repository": {
     "type": "git",
