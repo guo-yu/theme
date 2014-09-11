@@ -4,7 +4,7 @@ a smart theme loader and manager for CMS platforms
 
 ### Installation
 
-```
+```bash
 $ npm install theme
 ```
 
@@ -15,54 +15,54 @@ a `home` dir is the very parent dir of `node_modules` of your project.
 assume your project named `candy`, of course in the package.json.
 
 - `candy` (HOME)
-    - package.json (name="candy")
-    - `public` (static files locate here)
-    - `node_modules`
-        - `candy-theme-default`
-            - package.json("view engine"="jade","static"="./static")
-            - home.jade
-            - `static` (your theme's static files)
-        - `candy-theme-colorful`
-        - `underscore` just a example
-        - other-deps...
+  - package.json (name="candy")
+  - `public` (static files locate here)
+  - `node_modules`
+    - `candy-theme-default`
+      - package.json("view engine"="jade","static"="./static")
+      - home.jade
+      - `static` (your theme's static files)
+    - `candy-theme-colorful`
+    - `underscore` just a example
+    - other-deps...
 
 Theme will load NPM module as a theme by package name, and auto-search the correct result. even not fully filename provided. So here is a simple example, we provide `default/home` as a shortname of `candy-theme-default/home.jade`:
 
-````javascript
-var Theme = require('theme'),
-    themes = new Theme(__dirname);
+```javascript
+var Theme = require('theme');
+var themes = new Theme(__dirname);
 
 app.get('/article', function(req, res, next) {
-    // some logic to fetch data ...
-    var data = [1,2,3,4,5];
-    // render theme by shortname
-    themes.render('default/home', data, function(err, html){
-        if (err) return next(err);
-        // theme will replace your static files root by {{static}}
-        // so make sure in your theme, import static file like:
-        // href="{{static}}/css/basic.css"
-        return res.send(html);
-    });
+  // some logic to fetch data ...
+  var data = [1,2,3,4,5];
+  // render theme by shortname
+  themes.render('default/home', data, function(err, html){
+    if (err) return next(err);
+    // theme will replace your static files root by {{static}}
+    // so make sure in your theme, import static file like:
+    // href="{{static}}/css/basic.css"
+    return res.send(html);
+  });
 });
-````
+```
 In this case below, we list all available themes which named like `candy-theme-balabala`:
 
-````javascript
+```javascript
 theme.list(function(err, list) {
-    if (err) return console.log(err)
-    // underscore and other packages will not be listd here.
-    // the result is a parsed JSON-like Object.
-    console.log(list);
+  if (err) return console.log(err)
+  // underscore and other packages will not be listd here.
+  // the result is a parsed JSON-like Object.
+  console.log(list);
 });
-````
+```
 Theme also support install theme by NPM package name:
 
-````javascript
+```javascript
 theme.install('mails-flat', function(err, logs, modules){
-    if (err) return console.log(err);
-    return console.log(logs);
+  if (err) return console.log(err);
+  return console.log(logs);
 });
-````
+```
 
 Enjoy your themes and be happy publishing them to NPM !
 

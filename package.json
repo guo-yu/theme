@@ -1,10 +1,10 @@
 {
   "name": "theme",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "a smart theme loader and manager for CMS platforms",
   "main": "index.js",
   "scripts": {
-    "example": "node example/demo.js"
+    "example": "node example/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
     "url": "https://github.com/turingou/theme/issues"
   },
   "dependencies": {
+    "npm": "*",
     "underscore": "*",
     "pkghub": "~0.0.5",
     "pkghub-render": "~0.0.5"
