@@ -69,6 +69,18 @@ Enjoy your themes and be happy publishing them to NPM !
 ### API
 check this file: `index.js`
 
+### Tests
+```bash
+$ npm install .
+$ npm test
+```
+
+or run single test by:
+
+```bash
+$ npm run test-render
+```
+
 ### Contributing
 - Fork this repo
 - Clone your repo

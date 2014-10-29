@@ -4,7 +4,10 @@
   "description": "a smart theme loader and manager for CMS platforms",
   "main": "index.js",
   "scripts": {
-    "example": "node example/index.js"
+    "test": "DEBUG=theme,theme:* node_modules/.bin/mocha tests/*.js",
+    "test-list": "DEBUG=theme,theme:* node_modules/.bin/mocha tests/list.js",
+    "test-render": "DEBUG=theme,theme:* node_modules/.bin/mocha tests/render.js",
+    "test-install": "DEBUG=theme,theme:* node_modules/.bin/mocha tests/install.js"
   },
   "repository": {
     "type": "git",
