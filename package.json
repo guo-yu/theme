@@ -26,5 +26,9 @@
     "underscore": "*",
     "pkghub": "~0.0.5",
     "pkghub-render": "~0.0.5"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1",
+    "should": "^4.1.0"
   }
 }
