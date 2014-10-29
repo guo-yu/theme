@@ -26,9 +26,10 @@
   },
   "dependencies": {
     "npm": "*",
-    "underscore": "*",
+    "debug": "^2.1.0",
     "pkghub": "~0.0.5",
-    "pkghub-render": "~0.0.5"
+    "pkghub-render": "~0.0.5",
+    "underscore": "*"
   },
   "devDependencies": {
     "mocha": "^2.0.1",
