@@ -9,9 +9,10 @@ describe('#render', function() {
       site: 'siteName',
       banner: 'testBanner'
     };
-    theme.render('theme-theme-demo/home', data, function(err, html){
+    theme.render('theme-theme-lily/index', data, function(err, html){
       if (err)
         return done(err);
+      
       debug(html);
       done();
     });

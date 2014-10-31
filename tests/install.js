@@ -5,9 +5,12 @@ var theme = new Theme(path.resolve(__dirname, '../'));
 
 describe('#install', function() {
   it('It should install spec module', function(done) {
-    theme.install('mails-flat', function(err, logs, modules){
+    this.timeout(100000);
+
+    theme.install('theme-theme-lily', function(err, logs, modules){
       if (err)
         return done(err);
+
       debug(logs);
       debug(modules);
       done();
