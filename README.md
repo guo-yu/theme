@@ -1,11 +1,11 @@
 ## ![logo](https://cdn1.iconfinder.com/data/icons/august/PNG/Colors.png) theme ![npm](https://badge.fury.io/js/theme.png)
 
-a smart theme loader for cms platforms.
+a smart theme loader for CMS systems.
 
 ### Installation
 
 ```bash
-$ npm install theme
+$ npm install theme --save
 ```
 
 ### Example
@@ -28,57 +28,49 @@ assume your project named `candy`, of course in the package.json.
 
 Theme will load NPM module as a theme by package name, and auto-search the correct result. even not fully filename provided. So here is a simple example, we provide `default/home` as a shortname of `candy-theme-default/home.jade`:
 
-```javascript
-var Theme = require('theme');
-var themes = new Theme(__dirname);
+```js
+import Theme from 'theme'
+const themes = new Theme(__dirname)
 
 app.get('/article', function(req, res, next) {
   // some logic to fetch data ...
   var data = [1,2,3,4,5];
   // render theme by shortname
-  themes.render('default/home', data, function(err, html){
-    if (err) return next(err);
-    // theme will replace your static files root by {{static}}
-    // so make sure in your theme, import static file like:
-    // href="{{static}}/css/basic.css"
-    return res.send(html);
-  });
+  themes.render('default/home', data)
+    then(html => {
+      // theme will replace your static files root by {{static}}
+      // so make sure in your theme, import static file like:
+      // href="{{static}}/css/basic.css"
+      res.send(html)
+    })
+    .catch(next)
 });
 ```
 In this case below, we list all available themes which named like `candy-theme-balabala`:
 
-```javascript
-theme.list(function(err, list) {
-  if (err) return console.log(err)
-  // underscore and other packages will not be listd here.
-  // the result is a parsed JSON-like Object.
-  console.log(list);
-});
+```js
+theme.list()
+  .then(list => {
+    // underscore and other packages will not be listd here.
+    // the result is a parsed JSON-like Object.
+    console.log(list)
+  })
 ```
 Theme also support install theme by NPM package name:
 
-```javascript
-theme.install('mails-flat', function(err, logs, modules){
-  if (err) return console.log(err);
-  return console.log(logs);
-});
+```js
+theme.install('mails-flat')
+  .then(modules => {
+    console.log(module)
+  })
 ```
 
 Enjoy your themes and be happy publishing them to NPM !
-
-### API
-check this file: `index.js`
 
 ### Tests
 ```bash
 $ npm install .
 $ npm test
-```
-
-or run single test by:
-
-```bash
-$ npm run test-render
 ```
 
 ### Contributing

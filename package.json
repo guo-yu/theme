@@ -1,7 +1,7 @@
 {
   "name": "theme",
   "version": "0.1.0",
-  "description": "a smart theme loader and manager for CMS platforms",
+  "description": "a smart theme loader for CMS systems",
   "main": "dist/theme.js",
   "scripts": {
     "build": "node_modules/.bin/babel libs --out-dir dist --source-maps --watch",
