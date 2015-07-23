@@ -118,18 +118,17 @@ export default class Theme {
   **/
   render(template, data) {
     // Check if it's valid filename
-    var pkgname = hub.finder.split(template)
-    var filename = hub.finder.split(template, 'filename')
-    var cb = (callback && _.isFunction(callback)) ? callback : function() {};
+    let pkgname = finder.split(template)
+    let filename = finder.split(template, 'filename')
 
     if (!filename) 
-      return cb(new Error('Theme.render(); target template not found'))
+      return Promise.reject(new Error('Theme.render(); target template not found'))
 
     if (!pkgname && filename) 
       pkgname = this.default
 
     if (!pkgname) 
-      return cb(new Error('Theme.render(); target theme not found'))
+      return Promise.reject(new Error('Theme.render(); target theme not found'))
 
     // Check if it's a shortname
     if (pkgname.indexOf('-') === -1 && this.package.name) 
@@ -139,6 +138,10 @@ export default class Theme {
     if (!_.isEmpty(this.locals)) 
       data = _.extend(this.locals, data)
 
-    return render([pkgname, filename].join('/'), data, cb)
+    // Return a Promise/A+
+    return render(
+      [ pkgname, filename ].join('/'), 
+      data
+    )
   }
 }

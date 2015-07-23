@@ -5,6 +5,7 @@ Object.defineProperty(exports, '__esModule', {
 });
 exports.shadow = shadow;
 exports.shadows = shadows;
+exports.split = split;
 exports.pkg = pkg;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -130,6 +131,13 @@ function shadows(self) {
   });
 
   return modules;
+}
+
+function split(name, isFilename) {
+  if (!name || name.indexOf('/') === -1) return;
+  if (!isFilename) return name.substr(0, name.indexOf('/'));
+
+  return name.substr(name.indexOf('/') + 1);
 }
 
 // Fetch package.json from parent dir

@@ -119,6 +119,15 @@ export function shadows(self) {
   return modules
 }
 
+export function split(name, isFilename) {
+  if (!name || name.indexOf('/') === -1) 
+    return
+  if (!isFilename) 
+    return name.substr(0, name.indexOf('/'))
+
+  return name.substr(name.indexOf('/') + 1)
+}
+
 // Fetch package.json from parent dir
 export function pkg(home) {
   return readPkg(path.join(home, './package.json'))

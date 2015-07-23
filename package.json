@@ -32,6 +32,6 @@
     "babel": "^5.8.3",
     "mocha": "^2.0.1",
     "should": "^4.1.0",
-    "theme-theme-lily": "^0.1.0"
+    "theme-theme-lily": "0.1.0"
   }
 }

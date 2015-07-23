@@ -164,15 +164,14 @@ var Theme = (function () {
     key: 'render',
     value: function render(template, data) {
       // Check if it's valid filename
-      var pkgname = hub.finder.split(template);
-      var filename = hub.finder.split(template, 'filename');
-      var cb = callback && _underscore2['default'].isFunction(callback) ? callback : function () {};
+      var pkgname = _finder2['default'].split(template);
+      var filename = _finder2['default'].split(template, 'filename');
 
-      if (!filename) return cb(new Error('Theme.render(); target template not found'));
+      if (!filename) return _bluebird2['default'].reject(new Error('Theme.render(); target template not found'));
 
       if (!pkgname && filename) pkgname = this['default'];
 
-      if (!pkgname) return cb(new Error('Theme.render(); target theme not found'));
+      if (!pkgname) return _bluebird2['default'].reject(new Error('Theme.render(); target theme not found'));
 
       // Check if it's a shortname
       if (pkgname.indexOf('-') === -1 && this['package'].name) pkgname = this['package'].name + this.pattern + pkgname;
@@ -180,7 +179,8 @@ var Theme = (function () {
       // Mix locals, instead of `app.locals` and `res.locals`
       if (!_underscore2['default'].isEmpty(this.locals)) data = _underscore2['default'].extend(this.locals, data);
 
-      return (0, _pkghubRender2['default'])([pkgname, filename].join('/'), data, cb);
+      // Return a Promise/A+
+      return (0, _pkghubRender2['default'])([pkgname, filename].join('/'), data);
     }
   }]);
 
