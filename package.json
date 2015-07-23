@@ -2,12 +2,10 @@
   "name": "theme",
   "version": "0.1.0",
   "description": "a smart theme loader and manager for CMS platforms",
-  "main": "index.js",
+  "main": "dist/theme.js",
   "scripts": {
-    "test": "DEBUG=theme,theme:* node_modules/.bin/mocha tests/*.js",
-    "test-list": "DEBUG=theme,theme:* node_modules/.bin/mocha tests/list.js",
-    "test-render": "DEBUG=theme,theme:* node_modules/.bin/mocha tests/render.js",
-    "test-install": "DEBUG=theme,theme:* node_modules/.bin/mocha tests/install.js"
+    "build": "node_modules/.bin/babel libs --out-dir dist --source-maps --watch",
+    "test": "node_modules/mocha/bin/mocha tests/*.js --require tests/babelhook"
   },
   "repository": {
     "type": "git",
@@ -25,13 +23,13 @@
     "url": "https://github.com/turingou/theme/issues"
   },
   "dependencies": {
-    "npm": "*",
-    "debug": "^2.1.0",
-    "pkghub": "~0.0.5",
-    "pkghub-render": "~0.0.5",
-    "underscore": "*"
+    "bluebird": "^2.9.34",
+    "pkghub": "0.1.2",
+    "pkghub-render": "0.1.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "babel": "^5.8.3",
     "mocha": "^2.0.1",
     "should": "^4.1.0",
     "theme-theme-lily": "^0.1.0"
