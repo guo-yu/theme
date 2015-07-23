@@ -6,6 +6,8 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -38,7 +40,7 @@ var _pkghubRender2 = _interopRequireDefault(_pkghubRender);
 
 var _finder = require('./finder');
 
-var _finder2 = _interopRequireDefault(_finder);
+var finder = _interopRequireWildcard(_finder);
 
 var hub = new _pkghub2['default']();
 var defaultHome = _path2['default'].resolve(__dirname, '../', '../', '../');
@@ -58,19 +60,18 @@ var Theme = (function () {
 
     this.path = {};
     this.locals = {};
-
     this.pattern = '-theme-';
     this.path.home = home;
 
     // Fetch parent package.json
-    this['package'] = _finder2['default'].pkg(this.path.home);
+    this['package'] = finder.pkg(this.path.home);
 
     // Check public folder,
     // Where we are going to copy shadow links.
     this.path['public'] = _path2['default'].join(this.path.home, this['package']['public'] || './public');
 
     // Create shadow links
-    _finder2['default'].shadows(this);
+    finder.shadows(this);
   }
 
   /**
@@ -145,7 +146,7 @@ var Theme = (function () {
       if (!name) return _bluebird2['default'].reject(new Error('Theme name required'));
 
       return hub.install(name).then(function (modules) {
-        return _finder2['default'].shadow(modules.dependencies[name], _this2['public']).then(function () {
+        return finder.shadow(modules.dependencies[name], _this2.path['public']).then(function () {
           return _bluebird2['default'].resolve(modules);
         });
       });
@@ -164,8 +165,8 @@ var Theme = (function () {
     key: 'render',
     value: function render(template, data) {
       // Check if it's valid filename
-      var pkgname = _finder2['default'].split(template);
-      var filename = _finder2['default'].split(template, 'filename');
+      var pkgname = finder.split(template);
+      var filename = finder.split(template, 'filename');
 
       if (!filename) return _bluebird2['default'].reject(new Error('Theme.render(); target template not found'));
 

@@ -4,7 +4,7 @@ import Hub from 'pkghub'
 import _ from 'underscore'
 import Promise from 'bluebird'
 import render from 'pkghub-render'
-import finder from './finder'
+import * as finder from './finder'
 
 const hub = new Hub
 const defaultHome = path.resolve(__dirname, '../', '../', '../')
@@ -19,7 +19,6 @@ export default class Theme {
   constructor(home = defaultHome) {
     this.path = {}
     this.locals = {}
-
     this.pattern = '-theme-'
     this.path.home = home
 
@@ -100,7 +99,7 @@ export default class Theme {
     return hub.install(name).then(modules => {
       return finder.shadow(
         modules.dependencies[name], 
-        this.public
+        this.path.public
       ).then(() => {
         return Promise.resolve(modules)
       })
